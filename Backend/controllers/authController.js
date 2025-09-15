@@ -4,12 +4,18 @@ import generateToken from "../utils/generateToken.js";
 // Signup
 export const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, serviceType, planType } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: "User already exists" });
 
-    const user = await User.create({ username, email, password });
+    const user = await User.create({
+      username,
+      email,
+      password,
+      serviceType,
+      planType
+    });
 
     if (user) {
       generateToken(res, user._id);
@@ -17,6 +23,9 @@ export const registerUser = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
+        serviceType: user.serviceType,
+        planType: user.planType,
+        subscriptionStatus: user.subscriptionStatus,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -39,6 +48,9 @@ export const loginUser = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
+        serviceType: user.serviceType,
+        planType: user.planType,
+        subscriptionStatus: user.subscriptionStatus,
       });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
@@ -54,7 +66,6 @@ export const logoutUser = (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
 
-
 // Profile
 export const getProfile = (req, res) => {
   if (!req.user) {
@@ -66,6 +77,8 @@ export const getProfile = (req, res) => {
     _id: req.user._id,
     username: req.user.username,
     email: req.user.email,
+    serviceType: req.user.serviceType,
+    planType: req.user.planType,
+    subscriptionStatus: req.user.subscriptionStatus,
   });
 };
-
