@@ -5,6 +5,7 @@ import cors from "cors";
 import connectDB from "./db.js";
 import authRoutes from "./routes/authRoutes.js"; // corrected
 import morgan from "morgan";
+import leadRoutes from "./routes/leadRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -25,6 +26,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/leads", leadRoutes);
 
 // Health check
 app.get("/", (req, res) => res.send("API is running..."));
